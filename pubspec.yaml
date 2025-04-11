@@ -1,0 +1,17 @@
+name: ht_preferences_repository
+description: ...
+repository: https://github.com/headlines-toolkit/ht-preferences-repository
+publish_to: none
+
+environment:
+  sdk: ^3.7.0
+
+dependencies: 
+  ht_preferences_client:
+    git:
+        url: https://github.com/headlines-toolkit/ht-preferences-client.git
+
+dev_dependencies:
+  mocktail: ^1.0.4
+  test: ^1.25.8
+  very_good_analysis: ^7.0.0
