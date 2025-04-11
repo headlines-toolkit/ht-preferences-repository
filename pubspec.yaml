@@ -1,5 +1,5 @@
 name: ht_preferences_repository
-description: ...
+description: Repository for managing user preferences. This repository acts as an intermediary between the application's business logic (BLoCs) and the data source client (`HtPreferencesClient`). It handles potential client-level exceptions and enforces additional business rules, such as limiting the size of the headline reading history.
 repository: https://github.com/headlines-toolkit/ht-preferences-repository
 publish_to: none
 
