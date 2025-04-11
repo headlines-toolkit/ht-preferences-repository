@@ -1,4 +1,5 @@
-// ignore_for_file: prefer_const_constructors
+//
+// ignore_for_file: prefer_const_constructors, lines_longer_than_80_chars
 
 import 'package:ht_preferences_client/ht_preferences_client.dart';
 import 'package:ht_preferences_repository/ht_preferences_repository.dart';
@@ -20,7 +21,6 @@ class FakeCategory extends Fake implements Category {}
 // Create a fake class for Country to use as a fallback
 class FakeCountry extends Fake implements Country {}
 
-
 void main() {
   // Register fallback values before any tests run
   setUpAll(() {
@@ -28,10 +28,19 @@ void main() {
     registerFallbackValue(FakeSource());
     registerFallbackValue(FakeCategory());
     registerFallbackValue(FakeCountry());
-    registerFallbackValue(AppSettings(appFontSize: FontSize.medium, appFontType: AppFontType.roboto));
+    registerFallbackValue(
+      AppSettings(
+        appFontSize: FontSize.medium,
+        appFontType: AppFontType.roboto,
+      ),
+    );
     registerFallbackValue(ArticleSettings(articleFontSize: FontSize.medium));
-    registerFallbackValue(ThemeSettings(themeMode: AppThemeMode.dark, themeName: AppThemeName.blue));
-    registerFallbackValue(FeedSettings(feedListTileType: FeedListTileType.imageStart));
+    registerFallbackValue(
+      ThemeSettings(themeMode: AppThemeMode.dark, themeName: AppThemeName.blue),
+    );
+    registerFallbackValue(
+      FeedSettings(feedListTileType: FeedListTileType.imageStart),
+    );
     registerFallbackValue(NotificationSettings(enabled: false));
   });
 
@@ -70,8 +79,9 @@ void main() {
 
       test('getAppSettings returns settings on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getAppSettings())
-            .thenAnswer((_) async => tAppSettings);
+        when(
+          () => mockPreferencesClient.getAppSettings(),
+        ).thenAnswer((_) async => tAppSettings);
         // Act
         final result = await repository.getAppSettings();
         // Assert
@@ -79,86 +89,101 @@ void main() {
         verify(() => mockPreferencesClient.getAppSettings()).called(1);
       });
 
-      test('getAppSettings throws PreferenceNotFoundException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getAppSettings())
-            .thenThrow(PreferenceNotFoundException('Not found'));
-        // Act & Assert
-        await expectLater(
-          repository.getAppSettings(),
-          throwsA(isA<PreferenceNotFoundException>()),
-        );
-        verify(() => mockPreferencesClient.getAppSettings()).called(1);
-      });
+      test(
+        'getAppSettings throws PreferenceNotFoundException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getAppSettings(),
+          ).thenThrow(PreferenceNotFoundException('Not found'));
+          // Act & Assert
+          await expectLater(
+            repository.getAppSettings(),
+            throwsA(isA<PreferenceNotFoundException>()),
+          );
+          verify(() => mockPreferencesClient.getAppSettings()).called(1);
+        },
+      );
 
-      test('getAppSettings throws PreferenceUpdateException on client update error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getAppSettings())
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.getAppSettings(),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.getAppSettings()).called(1);
-      });
+      test(
+        'getAppSettings throws PreferenceUpdateException on client update error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getAppSettings(),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.getAppSettings(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(() => mockPreferencesClient.getAppSettings()).called(1);
+        },
+      );
 
-
-      test('getAppSettings throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getAppSettings())
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.getAppSettings(),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.getAppSettings()).called(1);
-      });
+      test(
+        'getAppSettings throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getAppSettings(),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.getAppSettings(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(() => mockPreferencesClient.getAppSettings()).called(1);
+        },
+      );
 
       test('setAppSettings completes on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.setAppSettings(tAppSettings))
-            .thenAnswer((_) async {});
+        when(
+          () => mockPreferencesClient.setAppSettings(tAppSettings),
+        ).thenAnswer((_) async {});
         // Act & Assert
-        await expectLater(
-          repository.setAppSettings(tAppSettings),
-          completes,
-        );
-        verify(() => mockPreferencesClient.setAppSettings(tAppSettings))
-            .called(1);
+        await expectLater(repository.setAppSettings(tAppSettings), completes);
+        verify(
+          () => mockPreferencesClient.setAppSettings(tAppSettings),
+        ).called(1);
       });
 
-      test('setAppSettings throws PreferenceUpdateException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.setAppSettings(tAppSettings))
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.setAppSettings(tAppSettings),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.setAppSettings(tAppSettings))
-            .called(1);
-      });
+      test(
+        'setAppSettings throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setAppSettings(tAppSettings),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.setAppSettings(tAppSettings),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setAppSettings(tAppSettings),
+          ).called(1);
+        },
+      );
 
-      test('setAppSettings throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.setAppSettings(tAppSettings))
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.setAppSettings(tAppSettings),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.setAppSettings(tAppSettings))
-            .called(1);
-      });
+      test(
+        'setAppSettings throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setAppSettings(tAppSettings),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.setAppSettings(tAppSettings),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setAppSettings(tAppSettings),
+          ).called(1);
+        },
+      );
     });
 
     // --- ArticleSettings ---
@@ -168,8 +193,9 @@ void main() {
 
       test('getArticleSettings returns settings on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getArticleSettings())
-            .thenAnswer((_) async => tArticleSettings);
+        when(
+          () => mockPreferencesClient.getArticleSettings(),
+        ).thenAnswer((_) async => tArticleSettings);
         // Act
         final result = await repository.getArticleSettings();
         // Assert
@@ -178,88 +204,103 @@ void main() {
       });
 
       test(
-          'getArticleSettings throws PreferenceNotFoundException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getArticleSettings())
-            .thenThrow(PreferenceNotFoundException('Not found'));
-        // Act & Assert
-        await expectLater(
-          repository.getArticleSettings(),
-          throwsA(isA<PreferenceNotFoundException>()),
-        );
-        verify(() => mockPreferencesClient.getArticleSettings()).called(1);
-      });
-
-       test('getArticleSettings throws PreferenceUpdateException on client update error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getArticleSettings())
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.getArticleSettings(),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.getArticleSettings()).called(1);
-      });
+        'getArticleSettings throws PreferenceNotFoundException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getArticleSettings(),
+          ).thenThrow(PreferenceNotFoundException('Not found'));
+          // Act & Assert
+          await expectLater(
+            repository.getArticleSettings(),
+            throwsA(isA<PreferenceNotFoundException>()),
+          );
+          verify(() => mockPreferencesClient.getArticleSettings()).called(1);
+        },
+      );
 
       test(
-          'getArticleSettings throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getArticleSettings())
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.getArticleSettings(),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.getArticleSettings()).called(1);
-      });
+        'getArticleSettings throws PreferenceUpdateException on client update error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getArticleSettings(),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.getArticleSettings(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(() => mockPreferencesClient.getArticleSettings()).called(1);
+        },
+      );
+
+      test(
+        'getArticleSettings throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getArticleSettings(),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.getArticleSettings(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(() => mockPreferencesClient.getArticleSettings()).called(1);
+        },
+      );
 
       test('setArticleSettings completes on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.setArticleSettings(tArticleSettings))
-            .thenAnswer((_) async {});
+        when(
+          () => mockPreferencesClient.setArticleSettings(tArticleSettings),
+        ).thenAnswer((_) async {});
         // Act & Assert
         await expectLater(
           repository.setArticleSettings(tArticleSettings),
           completes,
         );
-        verify(() => mockPreferencesClient.setArticleSettings(tArticleSettings))
-            .called(1);
+        verify(
+          () => mockPreferencesClient.setArticleSettings(tArticleSettings),
+        ).called(1);
       });
 
       test(
-          'setArticleSettings throws PreferenceUpdateException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.setArticleSettings(tArticleSettings))
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.setArticleSettings(tArticleSettings),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.setArticleSettings(tArticleSettings))
-            .called(1);
-      });
+        'setArticleSettings throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setArticleSettings(tArticleSettings),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.setArticleSettings(tArticleSettings),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setArticleSettings(tArticleSettings),
+          ).called(1);
+        },
+      );
 
-       test(
-          'setArticleSettings throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.setArticleSettings(tArticleSettings))
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.setArticleSettings(tArticleSettings),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.setArticleSettings(tArticleSettings))
-            .called(1);
-      });
+      test(
+        'setArticleSettings throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setArticleSettings(tArticleSettings),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.setArticleSettings(tArticleSettings),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setArticleSettings(tArticleSettings),
+          ).called(1);
+        },
+      );
     });
 
     // --- ThemeSettings ---
@@ -270,11 +311,11 @@ void main() {
       );
       final tException = Exception('Unexpected error');
 
-
       test('getThemeSettings returns settings on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getThemeSettings())
-            .thenAnswer((_) async => tThemeSettings);
+        when(
+          () => mockPreferencesClient.getThemeSettings(),
+        ).thenAnswer((_) async => tThemeSettings);
         // Act
         final result = await repository.getThemeSettings();
         // Assert
@@ -282,86 +323,104 @@ void main() {
         verify(() => mockPreferencesClient.getThemeSettings()).called(1);
       });
 
-      test('getThemeSettings throws PreferenceNotFoundException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getThemeSettings())
-            .thenThrow(PreferenceNotFoundException('Not found'));
-        // Act & Assert
-        await expectLater(
-          repository.getThemeSettings(),
-          throwsA(isA<PreferenceNotFoundException>()),
-        );
-        verify(() => mockPreferencesClient.getThemeSettings()).called(1);
-      });
-
-       test('getThemeSettings throws PreferenceUpdateException on client update error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getThemeSettings())
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.getThemeSettings(),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.getThemeSettings()).called(1);
-      });
+      test(
+        'getThemeSettings throws PreferenceNotFoundException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getThemeSettings(),
+          ).thenThrow(PreferenceNotFoundException('Not found'));
+          // Act & Assert
+          await expectLater(
+            repository.getThemeSettings(),
+            throwsA(isA<PreferenceNotFoundException>()),
+          );
+          verify(() => mockPreferencesClient.getThemeSettings()).called(1);
+        },
+      );
 
       test(
-          'getThemeSettings throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getThemeSettings())
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.getThemeSettings(),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.getThemeSettings()).called(1);
-      });
+        'getThemeSettings throws PreferenceUpdateException on client update error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getThemeSettings(),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.getThemeSettings(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(() => mockPreferencesClient.getThemeSettings()).called(1);
+        },
+      );
+
+      test(
+        'getThemeSettings throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getThemeSettings(),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.getThemeSettings(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(() => mockPreferencesClient.getThemeSettings()).called(1);
+        },
+      );
 
       test('setThemeSettings completes on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.setThemeSettings(tThemeSettings))
-            .thenAnswer((_) async {});
+        when(
+          () => mockPreferencesClient.setThemeSettings(tThemeSettings),
+        ).thenAnswer((_) async {});
         // Act & Assert
         await expectLater(
           repository.setThemeSettings(tThemeSettings),
           completes,
         );
-        verify(() => mockPreferencesClient.setThemeSettings(tThemeSettings))
-            .called(1);
+        verify(
+          () => mockPreferencesClient.setThemeSettings(tThemeSettings),
+        ).called(1);
       });
 
-      test('setThemeSettings throws PreferenceUpdateException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.setThemeSettings(tThemeSettings))
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.setThemeSettings(tThemeSettings),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.setThemeSettings(tThemeSettings))
-            .called(1);
-      });
+      test(
+        'setThemeSettings throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setThemeSettings(tThemeSettings),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.setThemeSettings(tThemeSettings),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setThemeSettings(tThemeSettings),
+          ).called(1);
+        },
+      );
 
-       test('setThemeSettings throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.setThemeSettings(tThemeSettings))
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.setThemeSettings(tThemeSettings),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.setThemeSettings(tThemeSettings))
-            .called(1);
-      });
+      test(
+        'setThemeSettings throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setThemeSettings(tThemeSettings),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.setThemeSettings(tThemeSettings),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setThemeSettings(tThemeSettings),
+          ).called(1);
+        },
+      );
     });
 
     // --- BookmarkedHeadlines ---
@@ -371,11 +430,11 @@ void main() {
       final tBookmarks = [tHeadline1, tHeadline2];
       final tException = Exception('Unexpected error');
 
-
       test('getBookmarkedHeadlines returns list on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getBookmarkedHeadlines())
-            .thenAnswer((_) async => tBookmarks);
+        when(
+          () => mockPreferencesClient.getBookmarkedHeadlines(),
+        ).thenAnswer((_) async => tBookmarks);
         // Act
         final result = await repository.getBookmarkedHeadlines();
         // Assert
@@ -384,131 +443,157 @@ void main() {
       });
 
       test(
-          'getBookmarkedHeadlines throws PreferenceNotFoundException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getBookmarkedHeadlines())
-            .thenThrow(PreferenceNotFoundException('Not found'));
-        // Act & Assert
-        await expectLater(
-          repository.getBookmarkedHeadlines(),
-          throwsA(isA<PreferenceNotFoundException>()),
-        );
-        verify(() => mockPreferencesClient.getBookmarkedHeadlines()).called(1);
-      });
-
-       test('getBookmarkedHeadlines throws PreferenceUpdateException on client update error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getBookmarkedHeadlines())
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.getBookmarkedHeadlines(),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.getBookmarkedHeadlines()).called(1);
-      });
+        'getBookmarkedHeadlines throws PreferenceNotFoundException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getBookmarkedHeadlines(),
+          ).thenThrow(PreferenceNotFoundException('Not found'));
+          // Act & Assert
+          await expectLater(
+            repository.getBookmarkedHeadlines(),
+            throwsA(isA<PreferenceNotFoundException>()),
+          );
+          verify(
+            () => mockPreferencesClient.getBookmarkedHeadlines(),
+          ).called(1);
+        },
+      );
 
       test(
-          'getBookmarkedHeadlines throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getBookmarkedHeadlines())
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.getBookmarkedHeadlines(),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.getBookmarkedHeadlines()).called(1);
-      });
+        'getBookmarkedHeadlines throws PreferenceUpdateException on client update error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getBookmarkedHeadlines(),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.getBookmarkedHeadlines(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.getBookmarkedHeadlines(),
+          ).called(1);
+        },
+      );
+
+      test(
+        'getBookmarkedHeadlines throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getBookmarkedHeadlines(),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.getBookmarkedHeadlines(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.getBookmarkedHeadlines(),
+          ).called(1);
+        },
+      );
 
       test('addBookmarkedHeadline completes on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.addBookmarkedHeadline(tHeadline1))
-            .thenAnswer((_) async {});
+        when(
+          () => mockPreferencesClient.addBookmarkedHeadline(tHeadline1),
+        ).thenAnswer((_) async {});
         // Act & Assert
         await expectLater(
           repository.addBookmarkedHeadline(tHeadline1),
           completes,
         );
-        verify(() => mockPreferencesClient.addBookmarkedHeadline(tHeadline1))
-            .called(1);
+        verify(
+          () => mockPreferencesClient.addBookmarkedHeadline(tHeadline1),
+        ).called(1);
       });
 
       test(
-          'addBookmarkedHeadline throws PreferenceUpdateException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.addBookmarkedHeadline(tHeadline1))
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.addBookmarkedHeadline(tHeadline1),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.addBookmarkedHeadline(tHeadline1))
-            .called(1);
-      });
+        'addBookmarkedHeadline throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.addBookmarkedHeadline(tHeadline1),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.addBookmarkedHeadline(tHeadline1),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.addBookmarkedHeadline(tHeadline1),
+          ).called(1);
+        },
+      );
 
       test(
-          'addBookmarkedHeadline throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.addBookmarkedHeadline(tHeadline1))
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.addBookmarkedHeadline(tHeadline1),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.addBookmarkedHeadline(tHeadline1))
-            .called(1);
-      });
+        'addBookmarkedHeadline throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.addBookmarkedHeadline(tHeadline1),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.addBookmarkedHeadline(tHeadline1),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.addBookmarkedHeadline(tHeadline1),
+          ).called(1);
+        },
+      );
 
       test('removeBookmarkedHeadline completes on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.removeBookmarkedHeadline('1'))
-            .thenAnswer((_) async {});
+        when(
+          () => mockPreferencesClient.removeBookmarkedHeadline('1'),
+        ).thenAnswer((_) async {});
         // Act & Assert
-        await expectLater(
-          repository.removeBookmarkedHeadline('1'),
-          completes,
-        );
-        verify(() => mockPreferencesClient.removeBookmarkedHeadline('1'))
-            .called(1);
+        await expectLater(repository.removeBookmarkedHeadline('1'), completes);
+        verify(
+          () => mockPreferencesClient.removeBookmarkedHeadline('1'),
+        ).called(1);
       });
 
       test(
-          'removeBookmarkedHeadline throws PreferenceUpdateException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.removeBookmarkedHeadline('1'))
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.removeBookmarkedHeadline('1'),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.removeBookmarkedHeadline('1'))
-            .called(1);
-      });
+        'removeBookmarkedHeadline throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.removeBookmarkedHeadline('1'),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.removeBookmarkedHeadline('1'),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.removeBookmarkedHeadline('1'),
+          ).called(1);
+        },
+      );
 
       test(
-          'removeBookmarkedHeadline throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.removeBookmarkedHeadline('1'))
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.removeBookmarkedHeadline('1'),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.removeBookmarkedHeadline('1'))
-            .called(1);
-      });
+        'removeBookmarkedHeadline throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.removeBookmarkedHeadline('1'),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.removeBookmarkedHeadline('1'),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.removeBookmarkedHeadline('1'),
+          ).called(1);
+        },
+      );
     });
 
     // --- FollowedSources ---
@@ -517,11 +602,11 @@ void main() {
       final tSources = [tSource1];
       final tException = Exception('Unexpected error');
 
-
       test('getFollowedSources returns list on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getFollowedSources())
-            .thenAnswer((_) async => tSources);
+        when(
+          () => mockPreferencesClient.getFollowedSources(),
+        ).thenAnswer((_) async => tSources);
         // Act
         final result = await repository.getFollowedSources();
         // Assert
@@ -530,87 +615,100 @@ void main() {
       });
 
       test(
-          'getFollowedSources throws PreferenceNotFoundException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getFollowedSources())
-            .thenThrow(PreferenceNotFoundException('Not found'));
-        // Act & Assert
-        await expectLater(
-          repository.getFollowedSources(),
-          throwsA(isA<PreferenceNotFoundException>()),
-        );
-        verify(() => mockPreferencesClient.getFollowedSources()).called(1);
-      });
+        'getFollowedSources throws PreferenceNotFoundException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getFollowedSources(),
+          ).thenThrow(PreferenceNotFoundException('Not found'));
+          // Act & Assert
+          await expectLater(
+            repository.getFollowedSources(),
+            throwsA(isA<PreferenceNotFoundException>()),
+          );
+          verify(() => mockPreferencesClient.getFollowedSources()).called(1);
+        },
+      );
 
-       test('getFollowedSources throws PreferenceUpdateException on client update error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getFollowedSources())
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.getFollowedSources(),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.getFollowedSources()).called(1);
-      });
+      test(
+        'getFollowedSources throws PreferenceUpdateException on client update error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getFollowedSources(),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.getFollowedSources(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(() => mockPreferencesClient.getFollowedSources()).called(1);
+        },
+      );
 
-       test('getFollowedSources throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getFollowedSources())
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.getFollowedSources(),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.getFollowedSources()).called(1);
-      });
+      test(
+        'getFollowedSources throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getFollowedSources(),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.getFollowedSources(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(() => mockPreferencesClient.getFollowedSources()).called(1);
+        },
+      );
 
       test('setFollowedSources completes on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.setFollowedSources(tSources))
-            .thenAnswer((_) async {});
+        when(
+          () => mockPreferencesClient.setFollowedSources(tSources),
+        ).thenAnswer((_) async {});
         // Act & Assert
-        await expectLater(
-          repository.setFollowedSources(tSources),
-          completes,
-        );
-        verify(() => mockPreferencesClient.setFollowedSources(tSources))
-            .called(1);
+        await expectLater(repository.setFollowedSources(tSources), completes);
+        verify(
+          () => mockPreferencesClient.setFollowedSources(tSources),
+        ).called(1);
       });
 
       test(
-          'setFollowedSources throws PreferenceUpdateException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.setFollowedSources(tSources))
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.setFollowedSources(tSources),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.setFollowedSources(tSources))
-            .called(1);
-      });
+        'setFollowedSources throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setFollowedSources(tSources),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.setFollowedSources(tSources),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setFollowedSources(tSources),
+          ).called(1);
+        },
+      );
 
-       test(
-          'setFollowedSources throws PreferenceUpdateException on unexpected error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.setFollowedSources(tSources))
-            .thenThrow(tException);
-        // Act & Assert
-        await expectLater(
-          repository.setFollowedSources(tSources),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.setFollowedSources(tSources))
-            .called(1);
-      });
+      test(
+        'setFollowedSources throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setFollowedSources(tSources),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.setFollowedSources(tSources),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setFollowedSources(tSources),
+          ).called(1);
+        },
+      );
     });
 
     // --- FollowedCategories ---
@@ -619,11 +717,11 @@ void main() {
       final tCategories = [tCategory1];
       final tException = Exception('Unexpected error');
 
-
       test('getFollowedCategories returns list on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getFollowedCategories())
-            .thenAnswer((_) async => tCategories);
+        when(
+          () => mockPreferencesClient.getFollowedCategories(),
+        ).thenAnswer((_) async => tCategories);
         // Act
         final result = await repository.getFollowedCategories();
         // Assert
@@ -632,146 +730,534 @@ void main() {
       });
 
       test(
-          'getFollowedCategories throws PreferenceNotFoundException on client error',
-          () async {
+        'getFollowedCategories throws PreferenceNotFoundException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getFollowedCategories(),
+          ).thenThrow(PreferenceNotFoundException('Not found'));
+          // Act & Assert
+          await expectLater(
+            repository.getFollowedCategories(),
+            throwsA(isA<PreferenceNotFoundException>()),
+          );
+          verify(() => mockPreferencesClient.getFollowedCategories()).called(1);
+        },
+      );
+
+      test(
+        'getFollowedCategories throws PreferenceUpdateException on client update error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getFollowedCategories(),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.getFollowedCategories(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(() => mockPreferencesClient.getFollowedCategories()).called(1);
+        },
+      );
+
+      test(
+        'getFollowedCategories throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getFollowedCategories(),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.getFollowedCategories(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(() => mockPreferencesClient.getFollowedCategories()).called(1);
+        },
+      );
+
+      test('setFollowedCategories completes on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getFollowedCategories())
-            .thenThrow(PreferenceNotFoundException('Not found'));
+        when(
+          () => mockPreferencesClient.setFollowedCategories(tCategories),
+        ).thenAnswer((_) async {});
         // Act & Assert
         await expectLater(
-          repository.getFollowedCategories(),
-          throwsA(isA<PreferenceNotFoundException>()),
+          repository.setFollowedCategories(tCategories),
+          completes,
         );
-        verify(() => mockPreferencesClient.getFollowedCategories()).called(1);
+        verify(
+          () => mockPreferencesClient.setFollowedCategories(tCategories),
+        ).called(1);
       });
 
-       test('getFollowedCategories throws PreferenceUpdateException on client update error',
-          () async {
+      test(
+        'setFollowedCategories throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setFollowedCategories(tCategories),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.setFollowedCategories(tCategories),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setFollowedCategories(tCategories),
+          ).called(1);
+        },
+      );
+
+      test(
+        'setFollowedCategories throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setFollowedCategories(tCategories),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.setFollowedCategories(tCategories),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setFollowedCategories(tCategories),
+          ).called(1);
+        },
+      );
+    });
+
+    // --- FollowedEventCountries ---
+    group('FollowedEventCountries', () {
+      final tCountry1 = Country(
+        id: 'co1',
+        name: 'Country 1',
+        isoCode: 'C1',
+        flagUrl: '',
+      );
+      final tCountries = [tCountry1];
+      final tException = Exception('Unexpected error');
+
+      test('getFollowedEventCountries returns list on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getFollowedCategories())
-            .thenThrow(PreferenceUpdateException('Update failed'));
+        when(
+          () => mockPreferencesClient.getFollowedEventCountries(),
+        ).thenAnswer((_) async => tCountries);
+        // Act
+        final result = await repository.getFollowedEventCountries();
+        // Assert
+        expect(result, tCountries);
+        verify(
+          () => mockPreferencesClient.getFollowedEventCountries(),
+        ).called(1);
+      });
+
+      test(
+        'getFollowedEventCountries throws PreferenceNotFoundException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getFollowedEventCountries(),
+          ).thenThrow(PreferenceNotFoundException('Not found'));
+          // Act & Assert
+          await expectLater(
+            repository.getFollowedEventCountries(),
+            throwsA(isA<PreferenceNotFoundException>()),
+          );
+          verify(
+            () => mockPreferencesClient.getFollowedEventCountries(),
+          ).called(1);
+        },
+      );
+
+      test(
+        'getFollowedEventCountries throws PreferenceUpdateException on client update error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getFollowedEventCountries(),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.getFollowedEventCountries(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.getFollowedEventCountries(),
+          ).called(1);
+        },
+      );
+
+      test(
+        'getFollowedEventCountries throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getFollowedEventCountries(),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.getFollowedEventCountries(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.getFollowedEventCountries(),
+          ).called(1);
+        },
+      );
+
+      test('setFollowedEventCountries completes on success', () async {
+        // Arrange
+        when(
+          () => mockPreferencesClient.setFollowedEventCountries(tCountries),
+        ).thenAnswer((_) async {});
         // Act & Assert
         await expectLater(
-          repository.getFollowedCategories(),
-          throwsA(isA<PreferenceUpdateException>()),
+          repository.setFollowedEventCountries(tCountries),
+          completes,
         );
-        verify(() => mockPreferencesClient.getFollowedCategories()).called(1);
+        verify(
+          () => mockPreferencesClient.setFollowedEventCountries(tCountries),
+        ).called(1);
       });
 
-       test('getFollowedCategories throws PreferenceUpdateException on unexpected error',
-          () async {
+      test(
+        'setFollowedEventCountries throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setFollowedEventCountries(tCountries),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.setFollowedEventCountries(tCountries),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setFollowedEventCountries(tCountries),
+          ).called(1);
+        },
+      );
+
+      test(
+        'setFollowedEventCountries throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setFollowedEventCountries(tCountries),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            repository.setFollowedEventCountries(tCountries),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setFollowedEventCountries(tCountries),
+          ).called(1);
+        },
+      );
+    });
+
+    // --- HeadlineReadingHistory ---
+    group('HeadlineReadingHistory', () {
+      late HtPreferencesRepository
+      historyRepository; // Repository with history limit
+      final tHeadline1 = Headline(id: 'h1', title: 'History 1');
+      final tHeadline2 = Headline(id: 'h2', title: 'History 2');
+      final tHeadline3 = Headline(id: 'h3', title: 'History 3');
+      final tHistory = [tHeadline1, tHeadline2];
+      final tException = Exception('Unexpected error');
+
+      setUp(() {
+        // Instantiate repository with a specific history size for these tests
+        historyRepository = HtPreferencesRepository(
+          preferencesClient: mockPreferencesClient,
+          maxHistorySize: 2, // Set a small limit for testing trimming
+        );
+      });
+
+      test('getHeadlineReadingHistory returns list on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getFollowedCategories())
-            .thenThrow(tException);
-        // Act & Assert
-            .thenThrow(PreferenceNotFoundException('')); // Simulate empty
-        when(() => mockPreferencesClient.addHeadlineToHistory(tHeadline1))
-            .thenAnswer((_) async {});
+        when(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).thenAnswer((_) async => tHistory);
+        // Act
+        final result = await historyRepository.getHeadlineReadingHistory();
+        // Assert
+        expect(result, tHistory);
+        verify(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).called(1);
+      });
+
+      test(
+        'getHeadlineReadingHistory throws PreferenceNotFoundException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).thenThrow(PreferenceNotFoundException('Not found'));
+          // Act & Assert
+          await expectLater(
+            historyRepository.getHeadlineReadingHistory(),
+            throwsA(isA<PreferenceNotFoundException>()),
+          );
+          verify(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).called(1);
+        },
+      );
+
+      test(
+        'getHeadlineReadingHistory throws PreferenceUpdateException on client update error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            historyRepository.getHeadlineReadingHistory(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).called(1);
+        },
+      );
+
+      test(
+        'getHeadlineReadingHistory throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).thenThrow(tException);
+          // Act & Assert
+          await expectLater(
+            historyRepository.getHeadlineReadingHistory(),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).called(1);
+        },
+      );
+
+      test('addHeadlineToHistory adds item when history is empty', () async {
+        // Arrange
+        when(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).thenThrow(PreferenceNotFoundException('')); // Simulate empty
+        when(
+          () => mockPreferencesClient.addHeadlineToHistory(tHeadline1),
+        ).thenAnswer((_) async {});
         // Act
         await historyRepository.addHeadlineToHistory(tHeadline1);
         // Assert
-        verify(() => mockPreferencesClient.getHeadlineReadingHistory()).called(1);
-        verify(() => mockPreferencesClient.addHeadlineToHistory(tHeadline1))
-            .called(1);
-        verifyNever(
-          () => mockPreferencesClient.removeHeadlineToHistory(any()),
-        );
+        verify(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).called(1);
+        verify(
+          () => mockPreferencesClient.addHeadlineToHistory(tHeadline1),
+        ).called(1);
+        verifyNever(() => mockPreferencesClient.removeHeadlineToHistory(any()));
       });
 
-      test('addHeadlineToHistory adds item when history is below limit',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getHeadlineReadingHistory())
-            .thenAnswer((_) async => [tHeadline1]); // History has 1 item
-        when(() => mockPreferencesClient.addHeadlineToHistory(tHeadline2))
-            .thenAnswer((_) async {});
-        // Act
-        await historyRepository.addHeadlineToHistory(tHeadline2);
-        // Assert
-        verify(() => mockPreferencesClient.getHeadlineReadingHistory()).called(1);
-        verify(() => mockPreferencesClient.addHeadlineToHistory(tHeadline2))
-            .called(1);
-        verifyNever(
-          () => mockPreferencesClient.removeHeadlineToHistory(any()),
-        ); // Limit is 2, no removal needed
-      });
+      test(
+        'addHeadlineToHistory adds item when history is below limit',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).thenAnswer((_) async => [tHeadline1]); // History has 1 item
+          when(
+            () => mockPreferencesClient.addHeadlineToHistory(tHeadline2),
+          ).thenAnswer((_) async {});
+          // Act
+          await historyRepository.addHeadlineToHistory(tHeadline2);
+          // Assert
+          verify(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).called(1);
+          verify(
+            () => mockPreferencesClient.addHeadlineToHistory(tHeadline2),
+          ).called(1);
+          verifyNever(
+            () => mockPreferencesClient.removeHeadlineToHistory(any()),
+          ); // Limit is 2, no removal needed
+        },
+      );
 
       test('addHeadlineToHistory moves existing item to top', () async {
         // Arrange
-        when(() => mockPreferencesClient.getHeadlineReadingHistory())
-            .thenAnswer((_) async => [tHeadline1, tHeadline2]);
-        when(() => mockPreferencesClient.addHeadlineToHistory(tHeadline1))
-            .thenAnswer((_) async {}); // Adding tHeadline1 again
+        when(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).thenAnswer((_) async => [tHeadline1, tHeadline2]);
+        when(
+          () => mockPreferencesClient.addHeadlineToHistory(tHeadline1),
+        ).thenAnswer((_) async {}); // Adding tHeadline1 again
         // Act
         await historyRepository.addHeadlineToHistory(tHeadline1);
         // Assert
-        verify(() => mockPreferencesClient.getHeadlineReadingHistory()).called(1);
-        verify(() => mockPreferencesClient.addHeadlineToHistory(tHeadline1))
-            .called(1);
+        verify(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).called(1);
+        verify(
+          () => mockPreferencesClient.addHeadlineToHistory(tHeadline1),
+        ).called(1);
         verifyNever(
           () => mockPreferencesClient.removeHeadlineToHistory(any()),
         ); // No removal needed as size is still 2
       });
 
-      test('addHeadlineToHistory adds new and removes oldest when at limit',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getHeadlineReadingHistory())
-            .thenAnswer((_) async => [tHeadline1, tHeadline2]); // At limit (2)
-        when(() => mockPreferencesClient.addHeadlineToHistory(tHeadline3))
-            .thenAnswer((_) async {});
-        when(() => mockPreferencesClient.removeHeadlineToHistory(tHeadline2.id)) // tHeadline2 is oldest
-            .thenAnswer((_) async {});
-        // Act
-        await historyRepository.addHeadlineToHistory(tHeadline3);
-        // Assert
-        verify(() => mockPreferencesClient.getHeadlineReadingHistory()).called(1);
-        verify(() => mockPreferencesClient.addHeadlineToHistory(tHeadline3))
-            .called(1);
-        verify(() => mockPreferencesClient.removeHeadlineToHistory(tHeadline2.id))
-            .called(1); // Verify oldest was removed
-      });
+      test(
+        'addHeadlineToHistory adds new and removes oldest when at limit',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).thenAnswer((_) async => [tHeadline1, tHeadline2]); // At limit (2)
+          when(
+            () => mockPreferencesClient.addHeadlineToHistory(tHeadline3),
+          ).thenAnswer((_) async {});
+          when(
+            () => mockPreferencesClient.removeHeadlineToHistory(tHeadline2.id),
+          ) // tHeadline2 is oldest
+          .thenAnswer((_) async {});
+          // Act
+          await historyRepository.addHeadlineToHistory(tHeadline3);
+          // Assert
+          verify(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).called(1);
+          verify(
+            () => mockPreferencesClient.addHeadlineToHistory(tHeadline3),
+          ).called(1);
+          verify(
+            () => mockPreferencesClient.removeHeadlineToHistory(tHeadline2.id),
+          ).called(1); // Verify oldest was removed
+        },
+      );
 
-       test('addHeadlineToHistory handles fetch error gracefully', () async {
+      test('addHeadlineToHistory handles fetch error gracefully', () async {
         // Arrange
-        when(() => mockPreferencesClient.getHeadlineReadingHistory())
-            .thenThrow(PreferenceUpdateException('Fetch failed'));
+        when(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).thenThrow(PreferenceUpdateException('Fetch failed'));
         // Act & Assert
         await expectLater(
           historyRepository.addHeadlineToHistory(tHeadline1),
-          throwsA(isA<PreferenceUpdateException>()), // Expect the fetch error to propagate
+          throwsA(
+            isA<PreferenceUpdateException>(),
+          ), // Expect the fetch error to propagate
         );
         // Verify interactions
-        verify(() => mockPreferencesClient.getHeadlineReadingHistory()).called(1);
+        verify(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).called(1);
         verifyNever(() => mockPreferencesClient.addHeadlineToHistory(any()));
         verifyNever(() => mockPreferencesClient.removeHeadlineToHistory(any()));
       });
 
       test('addHeadlineToHistory handles add error gracefully', () async {
         // Arrange
-        when(() => mockPreferencesClient.getHeadlineReadingHistory())
-            .thenAnswer((_) async => []); // History is empty
-        when(() => mockPreferencesClient.addHeadlineToHistory(tHeadline1))
-            .thenThrow(PreferenceUpdateException('Add failed')); // Add fails
+        when(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).thenAnswer((_) async => []); // History is empty
+        when(
+          () => mockPreferencesClient.addHeadlineToHistory(tHeadline1),
+        ).thenThrow(PreferenceUpdateException('Add failed')); // Add fails
         // Act & Assert
         await expectLater(
           historyRepository.addHeadlineToHistory(tHeadline1),
-          throwsA(isA<PreferenceUpdateException>()), // Expect the add error to propagate
+          throwsA(
+            isA<PreferenceUpdateException>(),
+          ), // Expect the add error to propagate
         );
         // Verify interactions
-        verify(() => mockPreferencesClient.getHeadlineReadingHistory()).called(1);
-        verify(() => mockPreferencesClient.addHeadlineToHistory(tHeadline1)).called(1);
+        verify(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).called(1);
+        verify(
+          () => mockPreferencesClient.addHeadlineToHistory(tHeadline1),
+        ).called(1);
         verifyNever(() => mockPreferencesClient.removeHeadlineToHistory(any()));
       });
 
-       test('addHeadlineToHistory ignores remove error when trimming', () async {
+      test(
+        'addHeadlineToHistory throws PreferenceUpdateException on unexpected add error',
+        () async {
+          // Arrange
+          final unexpectedError = Exception('Unexpected add issue');
+          when(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).thenAnswer((_) async => []); // History fetch succeeds (empty)
+          when(
+            () => mockPreferencesClient.addHeadlineToHistory(tHeadline1),
+          ).thenThrow(unexpectedError); // *Add fails unexpectedly*
+          // Act & Assert
+          await expectLater(
+            historyRepository.addHeadlineToHistory(tHeadline1),
+            throwsA(
+              isA<PreferenceUpdateException>(),
+            ), // Expect repository to wrap it
+          );
+          // Verify interactions
+          verify(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).called(1);
+          verify(
+            () => mockPreferencesClient.addHeadlineToHistory(tHeadline1),
+          ).called(1); // Add was attempted
+          verifyNever(
+            () => mockPreferencesClient.removeHeadlineToHistory(any()),
+          ); // Remove shouldn't be reached
+        },
+      );
+
+      test(
+        'addHeadlineToHistory throws PreferenceUpdateException on unexpected fetch error',
+        () async {
+          // Arrange
+          final unexpectedError = Exception('Unexpected fetch issue');
+          when(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).thenThrow(
+            unexpectedError,
+          ); // Simulate unexpected error during fetch
+          // Act & Assert
+          await expectLater(
+            historyRepository.addHeadlineToHistory(tHeadline1),
+            throwsA(
+              isA<PreferenceUpdateException>(),
+            ), // Expect repository to wrap it
+          );
+          // Verify interactions
+          verify(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).called(1);
+          verifyNever(() => mockPreferencesClient.addHeadlineToHistory(any()));
+          verifyNever(
+            () => mockPreferencesClient.removeHeadlineToHistory(any()),
+          );
+        },
+      );
+
+      test('addHeadlineToHistory ignores remove error when trimming', () async {
         // Arrange
-        when(() => mockPreferencesClient.getHeadlineReadingHistory())
-            .thenAnswer((_) async => [tHeadline1, tHeadline2]); // At limit (2)
-        when(() => mockPreferencesClient.addHeadlineToHistory(tHeadline3))
-            .thenAnswer((_) async {}); // Add succeeds
-        when(() => mockPreferencesClient.removeHeadlineToHistory(tHeadline2.id)) // tHeadline2 is oldest
-            .thenThrow(PreferenceUpdateException('Remove failed')); // Remove fails
+        when(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).thenAnswer((_) async => [tHeadline1, tHeadline2]); // At limit (2)
+        when(
+          () => mockPreferencesClient.addHeadlineToHistory(tHeadline3),
+        ).thenAnswer((_) async {}); // Add succeeds
+        when(
+          () => mockPreferencesClient.removeHeadlineToHistory(tHeadline2.id),
+        ) // tHeadline2 is oldest
+        .thenThrow(PreferenceUpdateException('Remove failed')); // Remove fails
         // Act & Assert
         // Should complete successfully despite the remove error
         await expectLater(
@@ -779,52 +1265,123 @@ void main() {
           completes,
         );
         // Verify interactions
-        verify(() => mockPreferencesClient.getHeadlineReadingHistory()).called(1);
-        verify(() => mockPreferencesClient.addHeadlineToHistory(tHeadline3))
-            .called(1);
-        verify(() => mockPreferencesClient.removeHeadlineToHistory(tHeadline2.id))
-            .called(1); // Verify remove was attempted
+        verify(
+          () => mockPreferencesClient.getHeadlineReadingHistory(),
+        ).called(1);
+        verify(
+          () => mockPreferencesClient.addHeadlineToHistory(tHeadline3),
+        ).called(1);
+        verify(
+          () => mockPreferencesClient.removeHeadlineToHistory(tHeadline2.id),
+        ).called(1); // Verify remove was attempted
       });
 
+      test(
+        'addHeadlineToHistory completes even if removing old item fails',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).thenAnswer((_) async => [tHeadline1, tHeadline2]); // At limit (2)
+          when(
+            () => mockPreferencesClient.addHeadlineToHistory(tHeadline3),
+          ).thenAnswer((_) async {}); // Add succeeds
+          when(
+            () => mockPreferencesClient.removeHeadlineToHistory(tHeadline2.id),
+          ) // tHeadline2 is oldest
+          .thenThrow(
+            PreferenceUpdateException('Remove failed'),
+          ); // *Removal fails*
+
+          // Act & Assert
+          // Should still complete successfully because the removal error is caught
+          await expectLater(
+            historyRepository.addHeadlineToHistory(tHeadline3),
+            completes,
+          );
+
+          // Verify interactions
+          verify(
+            () => mockPreferencesClient.getHeadlineReadingHistory(),
+          ).called(1);
+          verify(
+            () => mockPreferencesClient.addHeadlineToHistory(tHeadline3),
+          ).called(1);
+          verify(
+            () => mockPreferencesClient.removeHeadlineToHistory(tHeadline2.id),
+          ).called(1); // Verify remove was attempted
+        },
+      );
 
       test('removeHeadlineToHistory completes on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.removeHeadlineToHistory('h1'))
-            .thenAnswer((_) async {});
+        when(
+          () => mockPreferencesClient.removeHeadlineToHistory('h1'),
+        ).thenAnswer((_) async {});
         // Act & Assert
         await expectLater(
           historyRepository.removeHeadlineToHistory('h1'),
           completes,
         );
-        verify(() => mockPreferencesClient.removeHeadlineToHistory('h1'))
-            .called(1);
+        verify(
+          () => mockPreferencesClient.removeHeadlineToHistory('h1'),
+        ).called(1);
       });
 
       test(
-          'removeHeadlineToHistory throws PreferenceUpdateException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.removeHeadlineToHistory('h1'))
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          historyRepository.removeHeadlineToHistory('h1'),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.removeHeadlineToHistory('h1'))
-            .called(1);
-      });
+        'removeHeadlineToHistory throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.removeHeadlineToHistory('h1'),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            historyRepository.removeHeadlineToHistory('h1'),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.removeHeadlineToHistory('h1'),
+          ).called(1);
+        },
+      );
+
+      test(
+        'removeHeadlineToHistory throws PreferenceUpdateException on unexpected error',
+        () async {
+          // Arrange
+          final unexpectedError = Exception('Unexpected remove issue');
+          when(
+            () => mockPreferencesClient.removeHeadlineToHistory('h1'),
+          ).thenThrow(
+            unexpectedError,
+          ); // Simulate unexpected error during remove
+          // Act & Assert
+          await expectLater(
+            historyRepository.removeHeadlineToHistory('h1'),
+            throwsA(
+              isA<PreferenceUpdateException>(),
+            ), // Expect repository to wrap it
+          );
+          // Verify interactions
+          verify(
+            () => mockPreferencesClient.removeHeadlineToHistory('h1'),
+          ).called(1);
+        },
+      );
     });
 
     // --- FeedSettings ---
     group('FeedSettings', () {
-      final tFeedSettings =
-          FeedSettings(feedListTileType: FeedListTileType.imageStart);
+      final tFeedSettings = FeedSettings(
+        feedListTileType: FeedListTileType.imageStart,
+      );
 
       test('getFeedSettings returns settings on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getFeedSettings())
-            .thenAnswer((_) async => tFeedSettings);
+        when(
+          () => mockPreferencesClient.getFeedSettings(),
+        ).thenAnswer((_) async => tFeedSettings);
         // Act
         final result = await repository.getFeedSettings();
         // Assert
@@ -832,60 +1389,67 @@ void main() {
         verify(() => mockPreferencesClient.getFeedSettings()).called(1);
       });
 
-      test('getFeedSettings throws PreferenceNotFoundException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getFeedSettings())
-            .thenThrow(PreferenceNotFoundException('Not found'));
-        // Act & Assert
-        await expectLater(
-          repository.getFeedSettings(),
-          throwsA(isA<PreferenceNotFoundException>()),
-        );
-        verify(() => mockPreferencesClient.getFeedSettings()).called(1);
-      });
+      test(
+        'getFeedSettings throws PreferenceNotFoundException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getFeedSettings(),
+          ).thenThrow(PreferenceNotFoundException('Not found'));
+          // Act & Assert
+          await expectLater(
+            repository.getFeedSettings(),
+            throwsA(isA<PreferenceNotFoundException>()),
+          );
+          verify(() => mockPreferencesClient.getFeedSettings()).called(1);
+        },
+      );
 
       test('setFeedSettings completes on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.setFeedSettings(tFeedSettings))
-            .thenAnswer((_) async {});
+        when(
+          () => mockPreferencesClient.setFeedSettings(tFeedSettings),
+        ).thenAnswer((_) async {});
         // Act & Assert
-        await expectLater(
-          repository.setFeedSettings(tFeedSettings),
-          completes,
-        );
-        verify(() => mockPreferencesClient.setFeedSettings(tFeedSettings))
-            .called(1);
+        await expectLater(repository.setFeedSettings(tFeedSettings), completes);
+        verify(
+          () => mockPreferencesClient.setFeedSettings(tFeedSettings),
+        ).called(1);
       });
 
-      test('setFeedSettings throws PreferenceUpdateException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.setFeedSettings(tFeedSettings))
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.setFeedSettings(tFeedSettings),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() => mockPreferencesClient.setFeedSettings(tFeedSettings))
-            .called(1);
-      });
+      test(
+        'setFeedSettings throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setFeedSettings(tFeedSettings),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.setFeedSettings(tFeedSettings),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setFeedSettings(tFeedSettings),
+          ).called(1);
+        },
+      );
     });
 
     // --- NotificationSettings ---
     group('NotificationSettings', () {
       final tNotificationSettings = NotificationSettings(
         enabled: true,
-        categoryNotifications: ['c1'],
-        sourceNotifications: ['s1'],
-        followedEventCountryIds: ['co1'],
+        categoryNotifications: const ['c1'],
+        sourceNotifications: const ['s1'],
+        followedEventCountryIds: const ['co1'],
       );
 
       test('getNotificationSettings returns settings on success', () async {
         // Arrange
-        when(() => mockPreferencesClient.getNotificationSettings())
-            .thenAnswer((_) async => tNotificationSettings);
+        when(
+          () => mockPreferencesClient.getNotificationSettings(),
+        ).thenAnswer((_) async => tNotificationSettings);
         // Act
         final result = await repository.getNotificationSettings();
         // Assert
@@ -894,50 +1458,63 @@ void main() {
       });
 
       test(
-          'getNotificationSettings throws PreferenceNotFoundException on client error',
-          () async {
-        // Arrange
-        when(() => mockPreferencesClient.getNotificationSettings())
-            .thenThrow(PreferenceNotFoundException('Not found'));
-        // Act & Assert
-        await expectLater(
-          repository.getNotificationSettings(),
-          throwsA(isA<PreferenceNotFoundException>()),
-        );
-        verify(() => mockPreferencesClient.getNotificationSettings()).called(1);
-      });
+        'getNotificationSettings throws PreferenceNotFoundException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.getNotificationSettings(),
+          ).thenThrow(PreferenceNotFoundException('Not found'));
+          // Act & Assert
+          await expectLater(
+            repository.getNotificationSettings(),
+            throwsA(isA<PreferenceNotFoundException>()),
+          );
+          verify(
+            () => mockPreferencesClient.getNotificationSettings(),
+          ).called(1);
+        },
+      );
 
       test('setNotificationSettings completes on success', () async {
         // Arrange
-        when(() =>
-                mockPreferencesClient.setNotificationSettings(tNotificationSettings))
-            .thenAnswer((_) async {});
+        when(
+          () => mockPreferencesClient.setNotificationSettings(
+            tNotificationSettings,
+          ),
+        ).thenAnswer((_) async {});
         // Act & Assert
         await expectLater(
           repository.setNotificationSettings(tNotificationSettings),
           completes,
         );
-        verify(() =>
-                mockPreferencesClient.setNotificationSettings(tNotificationSettings))
-            .called(1);
+        verify(
+          () => mockPreferencesClient.setNotificationSettings(
+            tNotificationSettings,
+          ),
+        ).called(1);
       });
 
       test(
-          'setNotificationSettings throws PreferenceUpdateException on client error',
-          () async {
-        // Arrange
-        when(() =>
-                mockPreferencesClient.setNotificationSettings(tNotificationSettings))
-            .thenThrow(PreferenceUpdateException('Update failed'));
-        // Act & Assert
-        await expectLater(
-          repository.setNotificationSettings(tNotificationSettings),
-          throwsA(isA<PreferenceUpdateException>()),
-        );
-        verify(() =>
-                mockPreferencesClient.setNotificationSettings(tNotificationSettings))
-            .called(1);
-      });
+        'setNotificationSettings throws PreferenceUpdateException on client error',
+        () async {
+          // Arrange
+          when(
+            () => mockPreferencesClient.setNotificationSettings(
+              tNotificationSettings,
+            ),
+          ).thenThrow(PreferenceUpdateException('Update failed'));
+          // Act & Assert
+          await expectLater(
+            repository.setNotificationSettings(tNotificationSettings),
+            throwsA(isA<PreferenceUpdateException>()),
+          );
+          verify(
+            () => mockPreferencesClient.setNotificationSettings(
+              tNotificationSettings,
+            ),
+          ).called(1);
+        },
+      );
     });
   });
 }

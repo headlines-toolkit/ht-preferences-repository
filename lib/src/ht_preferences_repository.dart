@@ -1,4 +1,5 @@
-// ignore_for_file: depend_on_referenced_packages, lines_longer_than_80_chars
+//
+// ignore_for_file: depend_on_referenced_packages, lines_longer_than_80_chars, cascade_invocations, avoid_catches_without_on_clauses
 
 import 'dart:async';
 
@@ -298,8 +299,7 @@ class HtPreferencesRepository {
     try {
       return await _preferencesClient.getHeadlineReadingHistory();
     } on PreferenceNotFoundException {
-      // If not found by client, return empty list as per repository logic
-      return [];
+      rethrow; // Propagate specific exceptions like other getters
     } on PreferenceUpdateException {
       rethrow;
     } catch (e, stackTrace) {
@@ -343,9 +343,7 @@ class HtPreferencesRepository {
     // Identify headlines to remove if limit is exceeded
     final headlinesToRemove = <Headline>[];
     if (updatedHistoryList.length > maxHistorySize) {
-      headlinesToRemove.addAll(
-        updatedHistoryList.sublist(maxHistorySize),
-      );
+      headlinesToRemove.addAll(updatedHistoryList.sublist(maxHistorySize));
     }
 
     try {
@@ -355,12 +353,15 @@ class HtPreferencesRepository {
       // Remove oldest headlines via the client if necessary
       for (final oldHeadline in headlinesToRemove) {
         // Ignore errors during removal of old items, as adding the new one
-        // is the primary goal. Log potentially?
+        // is the primary goal.
         try {
           await _preferencesClient.removeHeadlineToHistory(oldHeadline.id);
         } catch (_) {
-          // Log removal error? For now, we suppress it.
-          // print('Warning: Failed to remove old history item ${oldHeadline.id}');
+          // Intentionally suppress errors during the removal of *old* history
+          // items. The primary goal is to add the *new* headline successfully.
+          // Failing to prune an old item is less critical than failing the
+          // entire add operation. Consider logging this error in a real app.
+          // print('Warning: Failed to remove old history item ${oldHeadline.id}: $_');
         }
       }
     } on PreferenceUpdateException {
